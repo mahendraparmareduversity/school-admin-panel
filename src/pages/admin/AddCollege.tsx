@@ -463,6 +463,15 @@ export default function AddCollege() {
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>College</Label>
+              <Input
+                value={form.name.trim() || "New college"}
+                readOnly
+                className="bg-muted"
+                placeholder="Enter college name above"
+              />
+            </div>
             {courseFees.map((row, index) => (
               <div key={index} className="grid gap-4 grid-cols-1 md:grid-cols-12 items-end border rounded-lg p-4">
                 <div className="md:col-span-3 space-y-2">
@@ -493,20 +502,37 @@ export default function AddCollege() {
                   </Select>
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <Label>Fee (display)</Label>
+                  <Label>Display fee (numbers only)</Label>
                   <Input
-                    placeholder="₹2.5L/yr"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step={1}
+                    placeholder="e.g. 250000"
                     value={row.fee ?? ""}
-                    onChange={(e) => updateCourseRow(index, "fee", e.target.value || undefined)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (v === "") return updateCourseRow(index, "fee", undefined);
+                      const num = v.replace(/[^0-9]/g, "");
+                      updateCourseRow(index, "fee", num || undefined);
+                    }}
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <Label>Fee amount (number)</Label>
+                  <Label>Main fee (numbers only)</Label>
                   <Input
                     type="number"
-                    placeholder="250000"
+                    inputMode="numeric"
+                    min={0}
+                    step={1}
+                    placeholder="e.g. 250000"
                     value={row.feeAmount ?? ""}
-                    onChange={(e) => updateCourseRow(index, "feeAmount", e.target.value ? Number(e.target.value) : undefined)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (v === "") return updateCourseRow(index, "feeAmount", undefined);
+                      const num = v.replace(/[^0-9]/g, "");
+                      updateCourseRow(index, "feeAmount", num ? Number(num) : undefined);
+                    }}
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
